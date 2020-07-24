@@ -1,49 +1,43 @@
+###############################################
+# Descarga de videos mp4 de una página web
+###############################################
+
+from bs4 import BeautifulSoup
+# Python 3.x
 import urllib.request, urllib.parse, urllib.error
+import webbrowser
 
-#Se importa la librería de expresiones regulares
-import re
-import ssl
-
-# Ignorar errores de certificado SSL
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
+listavideos = []
 
 url = input('Introduce la dirección de la página web:')
-datos = urllib.request.urlopen(url).read()
-
-#Obtenemos los ficheros de video mp4 de la página
-videos = re.findall(b'href="(http[s]?://.*?mp4)"', datos)
-for video in videos:
-    print(video.decode())
-
-#Obtenemos todos los enlaces
-#enlaces = re.findall(b'href="(http[s]?://.*?)"', datos)
-#for enlace in enlaces:
-#    print(enlace.decode())
+try:
+    html = urllib.request.urlopen(url).read()
+except:
+    print('Se ha producido un error al leer la página')
 
 
-#Obtenemos todos los enlaces usando BeautifulSoup
-#from bs4 import BeautifulSoup
-#soup =  BeautifulSoup(datos)
+soup = BeautifulSoup(html, "html.parser")
 
-##Convertir a UTF-8
-##if soup.original_encoding=='utf-8':
-##    content=str(webpage.content, 'utf-8')
-#if soup.original_encoding=='cp1252':
-#    content=str(webpage.content, 'cp1252')
-#    content.encode('utf-8','ignore')
-#if soup.original_encoding=='windows-1252':
-#    content=str(datos, 'windows-1252')
-#    content.encode('utf-8','ignore')
-#if soup.original_encoding=='ISO-8859-1':
-#    content=str(webpage.content, 'ISO-8859-1')
+# Se seleccionan todos los enlaces de la página
+for link in soup.select('a[href^="http://"]'):
+       href = link.get('href')
 
-#tags = soup('a')
-#for tag in tags:    
-#		print(tag.get('href'))
+       # Se seleccionan los enlaces con extensión mp4
+       if not any(href.endswith(x) for x in ['.mp4']):
+           continue
 
+       listavideos.append(href)       
+       
+try:       
+    for cadalinea in listavideos:       
+        filename = cadalinea.rsplit('/', 1)[-1]
+        print('Descargando el video...' + filename)
+        webbrowser.open(cadalinea, new = 2)
+        print("Descarga del video correcta.")
+except:
+    print('Se ha producido un error al descargar el video')
 
+print('El proceso finalizado correctamente')
 
-
+              
 
