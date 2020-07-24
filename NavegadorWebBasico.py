@@ -1,7 +1,7 @@
 import socket
 misock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-misock.connect(('data.pr4e.org', 80))
-cmd = 'GET http://data.pr4e.org/romeo.txt HTTP/1.0\r\n\r\n'.encode()
+misock.connect(('congreso.es', 80))
+cmd = 'GET http://www.congreso.es/wc/wc/audiovisualdetalledisponible?codSesion=7&codOrgano=380&fechaSesion=23/07/2020&mp4=mp4&idLegislaturaElegida=14 HTTP/1.0\r\n\r\n'.encode()
 misock.send(cmd)
 while True:
     datos = misock.recv(512)
