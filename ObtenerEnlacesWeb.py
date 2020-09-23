@@ -27,13 +27,22 @@ for link in soup.select('a[href^="http://"]'):
            continue
 
        listavideos.append(href)       
-       
-try:       
-    for cadalinea in listavideos:       
-        filename = cadalinea.rsplit('/', 1)[-1]
-        print('Descargando el video...' + filename)
-        webbrowser.open(cadalinea, new = 2)
-        print("Descarga del video correcta.")
+
+#Se descargan los ficheros
+try:
+    for cadalinea in listavideos:
+        filename = cadalinea.rsplit('/', 1)[-1]        
+        #Indicar la ruta sin la barra final (ejemplo: C:\Downloads)
+        path = r'C:\Downloads'
+        ficherolocal = os.path.join(path, filename)
+        #Se comprueba si el fichero existe en la ruta donde se va a descargar (ruta por defecto de descargas en el navegador) 
+        if not os.path.exists(ficherolocal):
+            print('Descargando el video... ' + filename)
+            webbrowser.open(cadalinea, new = 2)
+            print("Descarga del video correcta.")
+        else:
+            print('El siguiente fichero ya existe: ' + filename)
+        
 except:
     print('Se ha producido un error al descargar el video')
 
